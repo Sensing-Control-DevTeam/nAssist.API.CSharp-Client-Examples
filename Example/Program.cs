@@ -69,7 +69,7 @@ namespace Example
 
         public static void getSensorValues()
         {
-            var valuesResponse = client.Get(new SensorValues { Id = "TemperatureForecast753692" });
+            var valuesResponse = client.Get(new SensorValues { Id = "127126ef-a96a-4177-9a7f-cd28f0e79326" });
 
             foreach (var dataValue in valuesResponse.Values)
             {
@@ -79,7 +79,7 @@ namespace Example
 
         public static void getSensorStatuses()
         {
-            var statusesResponse = client.Get(new SensorStatuses { Id = "TemperatureForecast753692" });
+            var statusesResponse = client.Get(new SensorStatuses { Id = "127126ef-a96a-4177-9a7f-cd28f0e79326" });
 
             foreach (var dataValue in statusesResponse.Statuses)
             {
