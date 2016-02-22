@@ -21,7 +21,7 @@ namespace Example
 
         private const string CAMERA_ID = "4c03631b-c62b-4ce4-ad0c-998cdbffbfc7";
         private const string SENSOR_ID = "127126ef-a96a-4177-9a7f-cd28f0e79326";
-        private const string INSTALLATION_ID = "00000000-0000-0000-0000-b827eb9e544b";
+        private const string INSTALLATION_ID = "00000000-0000-0000-0000-b827eb3761f7";
 
         private const string USERNAME = "demo";
         private const string PASSWORD = "demo";
@@ -30,6 +30,8 @@ namespace Example
         {
             client = new JsonServiceClient(BASE_URL);
             credentials = client.Post(new Authenticate { UserName = USERNAME, Password = PASSWORD, RememberMe = true });
+
+            getInstallationDetails();
 
             uploadSensorValues();
 
@@ -48,6 +50,18 @@ namespace Example
             downloadPicture();
 
             Console.ReadKey();
+        }
+
+        public static void getInstallationDetails()
+        {
+            InstallationDetails request = new InstallationDetails
+            {
+                Id = INSTALLATION_ID
+            };
+
+            InstallationDetailsResponse response = client.Get(request);
+
+            Console.WriteLine("Installation Name: " + response.Installation.Name + " Owner Id: " + response.Installation.OwnerId);
         }
 
         public static void uploadSensorValues()
