@@ -36,21 +36,21 @@ namespace Example
 
             getInstallationDetails();
 
-            //uploadSensorValues();
+            uploadSensorValues();
 
-            //uploadSensorStatuses();
+            uploadSensorStatuses();
 
-            //getSensorValues();
+            getSensorValues();
 
-            //getSensorStatuses();
+            getSensorStatuses();
 
-            //getSensorsForInstallation();
+            getSensorsForInstallation();
 
-            //getNotificationsByType();
+            getNotificationsByType();
 
-            //uploadPicture();
+            uploadPicture();
 
-            //downloadPicture();
+            downloadPicture();
 
             createCustomNotification();
 
