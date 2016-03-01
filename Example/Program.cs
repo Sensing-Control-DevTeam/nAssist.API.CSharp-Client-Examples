@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using nassist.Azure.CloudTableStorage.Tables;
 using nassist.ServiceInterface.Services;
 using nassist.ServiceModel;
 using nassist.Shared.SensorData;
@@ -26,6 +27,8 @@ namespace Example
         private const string USERNAME = "demo";
         private const string PASSWORD = "demo";
 
+        private static Installation installationDetails;
+
         public static void Main(string[] args)
         {
             client = new JsonServiceClient(BASE_URL);
@@ -33,21 +36,23 @@ namespace Example
 
             getInstallationDetails();
 
-            uploadSensorValues();
+            //uploadSensorValues();
 
-            uploadSensorStatuses();
+            //uploadSensorStatuses();
 
-            getSensorValues();
+            //getSensorValues();
 
-            getSensorStatuses();
+            //getSensorStatuses();
 
-            getSensorsForInstallation();
+            //getSensorsForInstallation();
 
-            getNotificationsByType();
+            //getNotificationsByType();
 
-            uploadPicture();
+            //uploadPicture();
 
-            downloadPicture();
+            //downloadPicture();
+
+            createCustomNotification();
 
             Console.ReadKey();
         }
@@ -60,6 +65,8 @@ namespace Example
             };
 
             InstallationDetailsResponse response = client.Get(request);
+
+            installationDetails = response.Installation;
 
             Console.WriteLine("Installation Name: " + response.Installation.Name + " Owner Id: " + response.Installation.OwnerId);
         }
@@ -112,7 +119,7 @@ namespace Example
 
         public static void getSensorStatuses()
         {
-            var statusesResponse = client.Get(new SensorStatuses { Id = SENSOR_ID});
+            var statusesResponse = client.Get(new SensorStatuses { Id = SENSOR_ID });
 
             foreach (var dataValue in statusesResponse.Statuses)
             {
@@ -153,11 +160,12 @@ namespace Example
                 });
 
                 Console.WriteLine("Image uploaded successfully!");
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("Error uploading image: " + e);
             }
-            
+
         }
 
         public static void downloadPicture()
@@ -180,6 +188,33 @@ namespace Example
                 new WebClient().DownloadFile(p.Url, p.TriggerId + "_" + p.Date.ToString("yy-MM-dd") + ".jpg");
 
                 Console.WriteLine("Picture downloaded successfully!");
+            }
+        }
+
+        public static void createCustomNotification()
+        {
+            try
+            {
+                client.Post(new Events
+                {
+                    Event = new AzureEvent
+                    {
+                        Date = DateTime.UtcNow,
+                        Type = "custom",
+                        Subtype = "custom",
+                        InstallationId = INSTALLATION_ID,
+                        Installation = installationDetails.Name,
+                        Description = "My custom event text",
+                        Pending = true
+                    },
+                    UserIds = new List<int> { installationDetails.OwnerId.Value }
+                });
+
+                Console.WriteLine("Event created successfully");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error creating event: " + e);
             }
         }
 
